@@ -34,6 +34,10 @@ module tb_sa;
         clk = 0;
         reset_n = 0;
 
+        //Dump waveforms for GTKWave
+        $dumpfile("waveform.vcd");  //dump into waveform.vcd
+        $dumpvars(0, tb_sa);   //dump all variables in bench
+
         // Initialize matrices A and B with test data
         // A[0][0] = 1; A[0][1] = 2; A[0][2] = 3; A[0][3] = 4;
         // A[1][0] = 5; A[1][1] = 6; A[1][2] = 7; A[1][3] = 8;
