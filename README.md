@@ -2,7 +2,7 @@
 
 ## Overview
 
-The GEMM module accelerates matrix multiplication using a Systolic Array. Each Processing Element (PE) in the array performs a Multiply-Accumulate (MAC) operation.
+GEMM module for matrix multiplication using a Systolic Array. Each Processing Element (PE) in the array performs a Multiply-Accumulate (MAC) operation.
 
 ## Key Features
 
