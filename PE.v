@@ -1,2 +1,21 @@
 //Processing Element Module
 
+module PE #(parameter DATA_WIDTH = 8)(
+    input wire clk,
+    input wire reset_n,
+    input wire signed [] A_in
+    input wire signed [] B_in, 
+    input wire signed [31:0] C_in, //multiply a and b, add product to accumulated sum C
+    output reg signed [31:0] C_out, //result from C_in passed to C_out
+    //inputs Ain, Bin passed directly to outputs Aout, Bout for neighboring PEs
+    output reg signed [DATA_WIDTH-1:0] A_out
+    output reg signed [DATA_WIDTH-1:0] B_out
+
+); 
+
+    always @(*) begin 
+        
+    end 
+
+
+endmodule 
