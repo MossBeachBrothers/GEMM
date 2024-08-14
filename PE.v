@@ -2,6 +2,7 @@
 module PE #(parameter DATA_WIDTH = 8)(
     input wire clk,
     input wire reset_n, // active low 
+    input wire start_compute, //input wire to start compute
     input wire signed [DATA_WIDTH-1:0] A_in,  // corrected bit-width declaration
     input wire signed [DATA_WIDTH-1:0] B_in,  // corrected bit-width declaration
     input wire signed [31:0] C_in, // multiply A and B, add product to accumulated sum C
@@ -17,7 +18,7 @@ module PE #(parameter DATA_WIDTH = 8)(
             C_out <= 32'd0; 
             A_out <= 0;
             B_out <= 0;
-        end else begin 
+        end else if (start_compute) begin //only compute if start_compute
             C_out <= C_in + A_in * B_in; // multiply input A and B, add to C
             A_out <= A_in;
             B_out <= B_in;
