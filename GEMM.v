@@ -6,8 +6,8 @@ module GEMM #(parameter M = 4, K = 4, N = 4, ADDR_WIDTH = 16)(
     input wire [7:0] M_dimension, K_dimension, N_dimension, 
     output wire busy
 );
-
-    // Signals to control SRAMs and Systolic Array
+    
+//Control Enable Signals / Addresses
     wire write_enable_A, write_enable_B, write_enable_C;
     wire read_enable_A, read_enable_B, read_enable_C; 
     wire [ADDR_WIDTH-1:0] address_A, address_B, address_C;
@@ -16,38 +16,41 @@ module GEMM #(parameter M = 4, K = 4, N = 4, ADDR_WIDTH = 16)(
     wire [7:0] data_out_A, data_out_B;
     wire [31:0] data_out_C;
     wire start_compute;
-    
+
+    //Global Buffer A 
     SRAM #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(8), .M(M), .N(K)) BUFFER_A (
         .clk(clk),
         .reset_n(reset_n),
         .write_enable(write_enable_A),
         .read_enable(read_enable_A),
         .address(address_A),
-        .data_in(A_matrix),    // 2D array input for Buffer A
-        .data_out(A_matrix)    // 2D array output from Buffer A
+        .data_in(A_matrix),   
+        .data_out(A_matrix)    
     );
 
+    //Global Buffer B
     SRAM #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(8), .M(K), .N(N)) BUFFER_B (
         .clk(clk),
         .reset_n(reset_n),
         .write_enable(write_enable_B),
         .read_enable(read_enable_B),
         .address(address_B),
-        .data_in(B_matrix),    // 2D array input for Buffer B
-        .data_out(B_matrix)    // 2D array output from Buffer B
+        .data_in(B_matrix),   
+        .data_out(B_matrix)    
     );
 
+    //Global Buffer C
     SRAM #(.ADDR_WIDTH(ADDR_WIDTH), .DATA_WIDTH(32), .M(M), .N(N)) BUFFER_C (
         .clk(clk),
         .reset_n(reset_n),
         .write_enable(write_enable_C),
         .read_enable(read_enable_C),
         .address(address_C),
-        .data_in(C_matrix),    // 2D array input for Buffer C
-        .data_out(C_matrix)    // 2D array output from Buffer C
+        .data_in(C_matrix),    
+        .data_out(C_matrix)    
     );
 
-    // Instantiate GEMMController
+    //Contoller for Control Signals
     GEMMController #(
         .M(M),
         .K(K),
@@ -75,11 +78,11 @@ module GEMM #(parameter M = 4, K = 4, N = 4, ADDR_WIDTH = 16)(
         .data_in_C(data_in_C),
         .data_out_A(data_out_A),
         .data_out_B(data_out_B),
-        .systolic_out_C(data_out_C), // Connect the Systolic Array output to the controller
+        .systolic_out_C(data_out_C), 
         .start_compute(start_compute)
     );
 
-    // Instantiate Systolic Array
+    
     SystolicArray #(
         .M(M), 
         .K(K),
@@ -89,9 +92,9 @@ module GEMM #(parameter M = 4, K = 4, N = 4, ADDR_WIDTH = 16)(
         .clk(clk),
         .reset_n(reset_n),
         .start_compute(start_compute),
-        .A(data_out_A),  // Ensure that data_out_A is properly sized for the Systolic Array
-        .B(data_out_B),  // Ensure that data_out_B is properly sized for the Systolic Array
-        .C(data_out_C)   // Correct connection to match the output signal from the Systolic Array
+        .A(data_out_A), 
+        .B(data_out_B),
+        .C(data_out_C)  
     );
 
 endmodule 
